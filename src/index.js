@@ -12,11 +12,9 @@
  */
 function createDivWithText(text) {
     let element = document.createElement('div');
-
     element.textContent = text;
-
     return element;
-}
+ }
 
 /*
  Задание 2:
