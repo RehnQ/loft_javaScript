@@ -32,13 +32,12 @@ function delayPromise(seconds) {
 function loadAndSortTowns() {
     return new Promise(function(resolve, reject) {
         let url = 'https://raw.githubusercontent.com/smelukov/citiesTest/master/cities.json';
-        var request = new XMLHttpRequest();
+        let request = new XMLHttpRequest();
         request.open('GET', url);
         request.send();
         request.responseType='json';
         request.onload = function() {
-            var cities = request.response;
-
+            let cities = request.response;
             cities.sort(function(a, b) {
                 if (a.name < b.name) {
                     return -1;
