@@ -43,10 +43,71 @@ const addButton = homeworkContainer.querySelector('#add-button');
 // таблица со списком cookie
 const listTable = homeworkContainer.querySelector('#list-table tbody');
 
+function loadCookies() {
+    return document.cookie
+        .split('; ')
+        .reduce((p, c) => {
+            let [name, value] = c.split('=');
+            if (value) {
+                p.push({
+                    name,
+                    value
+                });
+            }
+
+            return p;
+        }, [])
+        .filter(cookie => isMatching(cookie.name, filterNameInput.value) || isMatching(cookie.value, filterNameInput.value));
+}
+
+function addToTable(cookies, where) {
+    where.innerHTML = '';
+
+    for (let cookie of cookies) {
+        addCookieTable(cookie.name, cookie.value, where);
+    }
+}
+
+function isMatching(full, chunk) {
+    return full.toLowerCase().indexOf(chunk.toLowerCase()) !== -1;
+}
+
+function addCookieTable(cookieKey, cookieValue, where) {
+    let element = document.createElement('tr');
+    element.innerHTML = `<td>${cookieKey}</td><td>${cookieValue}</td><td><button data-key="${cookieKey}">Удалить</button></td>`;
+    where.appendChild(element);
+}
+
+function deleteCookie(key) {
+    let date = new Date();
+
+    date.setDate(date.getDate() - 1);
+    document.cookie = `${key}=''; expires=${date.toUTCString()}`;
+}
+
 filterNameInput.addEventListener('keyup', function() {
     // здесь можно обработать нажатия на клавиши внутри текстового поля для фильтрации cookie
+    addToTable(loadCookies(), listTable);
 });
 
 addButton.addEventListener('click', () => {
     // здесь можно обработать нажатие на кнопку "добавить cookie"
+    document.cookie = `${addNameInput.value}=${addValueInput.value}`;
+
+    //addNameInput.value = '';
+    //addValueInput.value = '';
+    addToTable(loadCookies(), listTable);
 });
+
+listTable.addEventListener('click', e => {
+    if (e.target.getAttribute('data-key')) {
+        deleteCookie(e.target.getAttribute('data-key'));
+
+        let parentTR = e.target.closest('tr');
+        if (parentTR) {
+            listTable.removeChild(parentTR);
+        }
+    }
+});
+
+addToTable(loadCookies(), listTable);
