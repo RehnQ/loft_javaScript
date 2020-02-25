@@ -83,9 +83,7 @@ const filterResult = homeworkContainer.querySelector('#filter-result');
 
 filterInput.addEventListener('keyup', function() {
     let value = this.value.trim();
-
     filterResult.innerText = '';
-
     if (value != '') {
         filterResult.innerText = null;
         for (let i = 0; i < citiesArray.length; i++) {
