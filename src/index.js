@@ -52,7 +52,6 @@ function loadAndSortTowns() {
     });
 }
 
-
 export {
     delayPromise,
     loadAndSortTowns
