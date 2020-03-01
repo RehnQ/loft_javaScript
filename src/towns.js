@@ -82,15 +82,24 @@ const filterInput = homeworkContainer.querySelector('#filter-input');
 const filterResult = homeworkContainer.querySelector('#filter-result');
 
 filterInput.addEventListener('keyup', function() {
-    let value = this.value.trim();
-    filterResult.innerText = '';
-    if (value != '') {
-        filterResult.innerText = null;
-        for (let i = 0; i < citiesArray.length; i++) {
-            if (isMatching(citiesArray[i].name, value)) {
-                filterResult.innerText += citiesArray[i].name + '\n';
+    // это обработчик нажатия кливиш в текстовом поле
+    for (let i = 0; i < filterResult.children.length; i++) {
+        filterResult.removeChild(filterResult.children[i]);
+        i--;
+    }
+    let str = filterInput.value;
+
+    if (str != '') {
+        loadTowns().then(towns => {
+            for (let elem in towns) {
+                if (isMatching(towns[elem].name, str)) {
+                    let newDiv = document.createElement('div');
+
+                    newDiv.innerHTML = towns[elem].name;
+                    filterResult.appendChild(newDiv);
+                }
             }
-        }
+        })
     }
 });
 
